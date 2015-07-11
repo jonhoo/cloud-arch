@@ -5,8 +5,10 @@ set -e
 
 sudo date > /dev/null
 
-
 sec "Creating bootstrap image"
+
+msg "Checking that we have Arch's install scripts"
+pacman -Qi arch-install-scripts >/dev/null || sudo pacman -S arch-install-scripts # for pacstrap
 
 tmp=$(mktemp -d -t tmp.XXXXXXXXXX)
 tmp=$(readlink -f "$tmp")

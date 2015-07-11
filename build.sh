@@ -7,6 +7,9 @@ sudo date > /dev/null
 
 sec "Configuring disk image for the cloud"
 
+msg "Checking that we have Arch's install scripts"
+pacman -Qi arch-install-scripts >/dev/null || sudo pacman -S arch-install-scripts # for genfstab and arch-chroot
+
 cp bootstrapped.raw archlinux.current.raw
 tmp=$(mktemp -d -t tmp.XXXXXXXXXX)
 tmp=$(readlink -f "$tmp")
