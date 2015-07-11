@@ -11,7 +11,7 @@ msg "Checking that we have Arch's install scripts"
 pacman -Qi arch-install-scripts >/dev/null || sudo pacman -S arch-install-scripts # for genfstab and arch-chroot
 
 cp bootstrapped.raw archlinux.current.raw
-tmp=$(mktemp -d -t tmp.XXXXXXXXXX)
+tmp=$(mktemp -d -t arch-cloud-build.XXXXXXXXXX)
 tmp=$(readlink -f "$tmp")
 ./mount.sh "archlinux.current.raw" "$tmp"
 
