@@ -14,7 +14,7 @@ archlinux.raw: archlinux.current.raw config.iso
 	cp $< $@
 
 mount: archlinux.raw
-	mkdir mnt
+	mkdir -p mnt
 	./mount.sh $< ./mnt
 
 unmount:
