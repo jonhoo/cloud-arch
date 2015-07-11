@@ -9,5 +9,6 @@ sudo kpartx -d /dev/loop0
 sudo losetup -d /dev/loop0
 
 if [ $# -eq 1 ] ; then
-	rm -rf "$1"
+	msg2 "Removing tempdir $1"
+	rmdir "$1"
 fi
