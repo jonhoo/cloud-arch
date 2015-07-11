@@ -37,7 +37,8 @@ sudo pacstrap -c "$tmp" base \
 	gnu-netcat rsync wget git \
 	python2 \
 	vim \
-	cloud-init dmidecode
+	cloud-init dmidecode \
+	rxvt-unicode-terminfo
 	#gdb htop lsof strace mlocate numactl tmux the_silver_searcher \
 	#base-devel clang cmake linux-headers \
 	#git mercurial subversion bzr \
@@ -45,7 +46,6 @@ sudo pacstrap -c "$tmp" base \
 	#ghc go rust python2 ruby \
 	#pkgfile \
 	#zsh fish \
-	#rxvt-unicode-terminfo \
 	#emacs (draws in gtk3!) \
 
 msg "Install cloud-utils"
