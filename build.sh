@@ -35,7 +35,7 @@ msg2 "Writing MBR"
 sudo dd conv=notrunc bs=440 count=1 "if=$tmp/usr/lib/syslinux/bios/mbr.bin" "of=/dev/loop0"
 
 msg "Enabling [multilib]"
-sudo sed -i '/#\[multilib\],+1/s/^#//' "$tmp/etc/pacman.conf"
+sudo sed -i '/#\[multilib\]/,+1s/^#//' "$tmp/etc/pacman.conf"
 
 msg "Configuring cloud-init"
 
