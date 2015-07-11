@@ -1,12 +1,12 @@
+archlinux.current.raw: bootstrapped.raw build.sh
+	./build.sh
+
 config.iso: user-data meta-data
 	pacman -Qi cdrkit >/dev/null || sudo pacman -S cdrkit # for genisoimage
 	genisoimage  -output $@ -volid cidata -joliet -rock user-data meta-data
 
 bootstrapped.raw: bootstrap.sh
 	./bootstrap.sh
-
-archlinux.current.raw: bootstrapped.raw build.sh
-	./build.sh
 
 archlinux.raw: archlinux.current.raw config.iso
 	# depends on config.iso because some settings aren't applied unless the
