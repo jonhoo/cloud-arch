@@ -77,6 +77,8 @@ DHCP=ipv4
 [DHCPv4]
 UseHostname=false' | sudo tee "$tmp/etc/systemd/network/dhcp-all.network"
 sudo arch-chroot "$tmp" systemctl enable systemd-networkd.service
+sudo arch-chroot "$tmp" systemctl enable systemd-resolved.service
+sudo ln -sfn /run/systemd/resolve/resolv.conf "$tmp/etc/resolv.conf"
 sudo sed -i 's/network.target/network-online.target/' "$tmp/usr/lib/systemd/system/cloud-init.service"
 
 # Start daemons on boot
