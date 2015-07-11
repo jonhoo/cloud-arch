@@ -12,7 +12,7 @@ msg "Selecting disk image $file"
 mounted=$(mount | grep -c loop0p1) || mounted=0
 if [ "$mounted" != "0" ]; then
 	msg2 "Cleaning up previous build"
-	./unmount.sh "$file"
+	./unmount.sh
 fi
 
 if [ ! -e "$file" ]; then
