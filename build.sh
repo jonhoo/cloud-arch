@@ -92,7 +92,6 @@ sudo arch-chroot "$tmp" systemctl enable cloud-final
 msg "Wiping machine ID"
 printf "" | sudo tee "$tmp/etc/machine-id"
 printf "" | sudo tee "$tmp/var/lib/dbus/machine-id"
-sudo arch-chroot "$tmp" systemctl enable systemd-machine-id-commit
 
 msg "Writing motd"
 # We don't want to use the pacman keys in the image, because the private
