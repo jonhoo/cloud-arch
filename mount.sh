@@ -9,8 +9,7 @@ new=0
 
 msg "Selecting disk image $file"
 
-mounted=$(mount | grep -c loop0p1) || mounted=0
-if [ "$mounted" != "0" ]; then
+if [ -e .mountfile ]; then
 	msg2 "Cleaning up previous build"
 	./unmount.sh
 fi
@@ -23,13 +22,15 @@ if [ ! -e "$file" ]; then
 fi
 
 msg2 "Setting up disk mountpoint"
-sudo losetup -f --show "$file"
-sudo kpartx -a /dev/loop0
+lodev=$(basename "$(sudo losetup -f --show "$file")")
+sudo kpartx -a "/dev/$lodev"
 
 if [ "$new" = "1" ]; then
 	msg2 "Formatting disk"
-	sudo mkfs.ext4 /dev/mapper/loop0p1
+	sudo mkfs.ext4 "/dev/mapper/${lodev}p1"
 fi
 
 msg2 "Mounting image"
-sudo mount /dev/mapper/loop0p1 "$mnt"
+sudo mount "/dev/mapper/${lodev}p1" "$mnt"
+
+basename "$lodev" > .mountpoint

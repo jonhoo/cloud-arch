@@ -15,8 +15,13 @@ tmp=$(mktemp -d -t arch-cloud-build.XXXXXXXXXX)
 tmp=$(readlink -f "$tmp")
 ./mount.sh "archlinux.current.raw" "$tmp"
 
+if [ ! -e ".mountpoint" ]; then
+	exit 1
+fi
+lodev=$(cat .mountpoint)
+
 msg "Generating /etc/fstab for $tmp"
-uuid=$(blkid -o value "/dev/mapper/loop0p1" | head -n1)
+uuid=$(blkid -o value "/dev/mapper/${lodev}p1" | head -n1)
 sudo genfstab -U "$tmp/" | sudo tee -a "$tmp/etc/fstab" > /dev/null
 sudo sed -i "s@$tmp@/@" "$tmp/etc/fstab"
 
@@ -32,7 +37,7 @@ sudo sed -i "s@^UI @# UI @" "$tmp/boot/syslinux/syslinux.cfg"
 sudo sed -i "s@root=/dev/sda3@root=UUID=$uuid console=tty0 console=ttyS0,115200n8@" "$tmp/boot/syslinux/syslinux.cfg"
 
 msg2 "Writing MBR"
-sudo dd conv=notrunc bs=440 count=1 "if=$tmp/usr/lib/syslinux/bios/mbr.bin" "of=/dev/loop0"
+sudo dd conv=notrunc bs=440 count=1 "if=$tmp/usr/lib/syslinux/bios/mbr.bin" "of=/dev/${lodev}"
 
 msg "Enabling [multilib]"
 sudo sed -i '/#\[multilib\]/,+1s/^#//' "$tmp/etc/pacman.conf"
