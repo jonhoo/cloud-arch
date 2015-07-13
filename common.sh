@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sec() {
-	printf "\e[1;34m:: \e[0m\e[1m%s\e[0m\n" "$*"
+	printf "\n\e[1;34m:: \e[0m\e[1m%s\e[0m\n" "$*"
 }
 msg() {
 	printf "\e[1;32m==> \e[39m%s\e[0m\n" "$*"
