@@ -13,6 +13,11 @@ archlinux.raw: archlinux.current.raw config.iso
 	# image is clean
 	cp $< $@
 
+%-image.raw: setups/%.sh archlinux.current.raw
+	cp archlinux.current.raw $@.tmp
+	sh -c 'set -e; D=$$(mktemp -d -t arch-cloud-setup.XXXXXXXXXX); ./mount.sh "$@.tmp" "$$D"; setups/$*.sh "$@.tmp" "$$D"; ./unmount.sh "$$D"'
+	mv $@.tmp $@
+
 mount: archlinux.raw
 	mkdir -p mnt
 	./mount.sh $< ./mnt
