@@ -37,8 +37,15 @@ pre_setup() {
 		lodev=$(cat .mountpoint)
 		sudo arch-chroot "$2" /usr/bin/growpart "/dev/${lodev}" 1
 
-		msg "Remounting"
+		msg "Growing filesystem"
 		./unmount.sh
+
+		lodev=$(basename "$(sudo losetup -f --show "$1")")
+		e2fsck -f "/dev/${lodev}p1"
+		resize2fs "/dev/${lodev}p1"
+		sudo losetup -d "/dev/${lodev}"
+
+		msg "Remounting"
 		./mount.sh "$1" "$2"
 	fi
 
