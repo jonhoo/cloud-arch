@@ -25,6 +25,15 @@ mount: archlinux.raw
 unmount:
 	./unmount.sh
 
+FWD=hostfwd=tcp::10080-:80
+run-%: config.iso %-image.raw
+	qemu-system-x86_64 \
+		-enable-kvm \
+		-nographic -drive file=$*-image.raw,if=virtio \
+		-drive file=config.iso,if=virtio \
+		-net user,hostfwd=tcp::10022-:22,$(FWD) \
+		-net nic
+
 run: config.iso archlinux.raw
 	qemu-system-x86_64 \
 		-enable-kvm \
