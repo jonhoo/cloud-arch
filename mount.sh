@@ -31,5 +31,7 @@ if [ "$new" = "1" ]; then
 	sudo mkfs.ext4 "/dev/mapper/${lodev}p1"
 fi
 
-msg2 "Mounting image"
-sudo mount "/dev/mapper/${lodev}p1" "$mnt"
+if [ $# -eq 2 ]; then
+	msg2 "Mounting image"
+	sudo mount "/dev/mapper/${lodev}p1" "$mnt"
+fi
