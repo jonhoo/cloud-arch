@@ -24,6 +24,7 @@ fi
 msg2 "Setting up disk mountpoint"
 lodev=$(basename "$(sudo losetup -f --show "$file")")
 sudo kpartx -a "/dev/$lodev"
+echo "$lodev" > .mountpoint
 
 if [ "$new" = "1" ]; then
 	msg2 "Formatting disk"
@@ -32,5 +33,3 @@ fi
 
 msg2 "Mounting image"
 sudo mount "/dev/mapper/${lodev}p1" "$mnt"
-
-basename "$lodev" > .mountpoint

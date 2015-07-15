@@ -10,7 +10,7 @@ fi
 lodev=$(cat .mountpoint)
 msg "Unmounting disk image"
 sudo umount "/dev/mapper/${lodev}p1" || :
-sudo kpartx -d "/dev/${lodev}"
+sudo kpartx -d "/dev/${lodev}" || :
 sudo losetup -d "/dev/${lodev}"
 rm .mountpoint
 
