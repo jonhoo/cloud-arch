@@ -22,8 +22,7 @@ lodev=$(cat .mountpoint)
 
 msg "Generating /etc/fstab for $tmp"
 uuid=$(sudo blkid -o value "/dev/mapper/${lodev}p1" | head -n1)
-sudo genfstab -U "$tmp/" | sudo tee -a "$tmp/etc/fstab" > /dev/null
-sudo sed -i "s@$tmp@/@" "$tmp/etc/fstab"
+echo "UUID=$uuid / ext4 rw,relatime,data=ordered 0 1" | sudo tee -a "$tmp/etc/fstab"
 
 msg "Setting up bootloader"
 sudo mkdir -p "$tmp/boot/syslinux"
