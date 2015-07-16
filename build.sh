@@ -41,7 +41,7 @@ sudo dd conv=notrunc bs=440 count=1 "if=$tmp/usr/lib/syslinux/bios/mbr.bin" "of=
 
 msg "Enabling [multilib]"
 sudo sed -i '/#\[multilib\]/,+1s/^#//' "$tmp/etc/pacman.conf"
-sudo arch-chroot "$tmp" pacman -Syy
+sudo arch-chroot "$tmp" pacman -Sy
 
 msg "Configuring cloud-init"
 
