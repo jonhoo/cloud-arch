@@ -21,7 +21,7 @@ fi
 lodev=$(cat .mountpoint)
 
 msg "Generating /etc/fstab for $tmp"
-uuid=$(blkid -o value "/dev/mapper/${lodev}p1" | head -n1)
+uuid=$(sudo blkid -o value "/dev/mapper/${lodev}p1" | head -n1)
 sudo genfstab -U "$tmp/" | sudo tee -a "$tmp/etc/fstab" > /dev/null
 sudo sed -i "s@$tmp@/@" "$tmp/etc/fstab"
 
@@ -41,6 +41,7 @@ sudo dd conv=notrunc bs=440 count=1 "if=$tmp/usr/lib/syslinux/bios/mbr.bin" "of=
 
 msg "Enabling [multilib]"
 sudo sed -i '/#\[multilib\]/,+1s/^#//' "$tmp/etc/pacman.conf"
+sudo arch-chroot "$tmp" pacman -Syy
 
 msg "Configuring cloud-init"
 

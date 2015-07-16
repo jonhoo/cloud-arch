@@ -24,6 +24,9 @@ fi
 msg2 "Setting up disk mountpoint"
 lodev=$(basename "$(sudo losetup -f --show "$file")")
 sudo kpartx -a "/dev/$lodev"
+# wait for partition to become available
+sleep 1
+
 echo "$lodev" > .mountpoint
 
 if [ "$new" = "1" ]; then
