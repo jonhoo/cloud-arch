@@ -10,10 +10,10 @@ sec "Configuring disk image for the cloud"
 msg "Checking that we have Arch's install scripts"
 pacman -Qi arch-install-scripts >/dev/null || sudo pacman -S arch-install-scripts # for genfstab and arch-chroot
 
-cp bootstrapped.raw archlinux.current.raw
+cp bootstrapped.raw archlinux.raw.tmp
 tmp=$(mktemp -d -t arch-cloud-build.XXXXXXXXXX)
 tmp=$(readlink -f "$tmp")
-./mount.sh "archlinux.current.raw" "$tmp"
+./mount.sh "archlinux.raw.tmp" "$tmp"
 
 if [ ! -e ".mountpoint" ]; then
 	exit 1
@@ -122,3 +122,4 @@ You might also want to update the system using
 (you can change this message by editing /etc/motd)" | sudo tee -a "$tmp/etc/motd"
 
 ./unmount.sh "$tmp"
+mv archlinux.raw.tmp archlinux.raw
