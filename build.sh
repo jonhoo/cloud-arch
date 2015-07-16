@@ -21,7 +21,7 @@ fi
 lodev=$(cat .mountpoint)
 
 msg "Generating /etc/fstab for $tmp"
-uuid=$(blkid -o value "/dev/mapper/${lodev}p1" | head -n1)
+uuid=$(sudo blkid -o value "/dev/mapper/${lodev}p1" | head -n1)
 sudo genfstab -U "$tmp/" | sudo tee -a "$tmp/etc/fstab" > /dev/null
 sudo sed -i "s@$tmp@/@" "$tmp/etc/fstab"
 
