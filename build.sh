@@ -50,6 +50,8 @@ sudo sed -i "s@distro: ubuntu@distro: arch@" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i "s@name: ubuntu@name: arch@" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i "s@gecos: Ubuntu@gecos: Arch@" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i "s@groups: .*@groups: [adm, wheel]@" "$tmp/etc/cloud/cloud.cfg"
+sudo sed -i '/gecos:/i \
+     system: true' "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i "/sudo:/d" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i '/# %wheel ALL=(ALL) NOPASSWD: ALL/s/^# //' "$tmp/etc/sudoers"
 
