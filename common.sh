@@ -28,6 +28,14 @@ IMAGE_FILE="$1"
 # this is root for the VM being built.
 MNT_POINT="$2"
 
+# rooted cmd args...
+#
+# Runs "cmd args..." chroot'd into the VM (at $MNT_POINT) as root.
+rooted() {
+	echo sudo arch-chroot "$MNT_POINT" "$@"
+	sudo arch-chroot "$MNT_POINT" "$@"
+}
+
 pre_setup() {
 	local size="$1"
 	local self=$(basename "$0")
@@ -42,7 +50,7 @@ pre_setup() {
 
 		msg "Growing partitions"
 		local lodev=$(cat .mountpoint)
-		sudo arch-chroot "$MNT_POINT" /usr/bin/growpart "/dev/${lodev}" 1
+		rooted /usr/bin/growpart "/dev/${lodev}" 1
 
 		msg "Growing filesystem"
 		./unmount.sh
