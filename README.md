@@ -41,6 +41,38 @@ you want me to have access to your server.** You should also change the
 password, or disable password authentication altogether, if you're
 making this box publicly available.
 
+## Building and running a simple web image
+
+```shell
+# Get the source
+git clone https://github.com/jonhoo/cloud-arch
+cd cloud-arch
+
+# Create a new VM setup that installs and enables apache
+cp setups/example.sh setups/web.sh
+echo 'rooted pacman -S --noconfirm apache' >> setups/web.sh
+echo 'rooted systemctl enable httpd' >> setups/web.sh
+
+# Build image
+make web-image.raw
+
+# If you modify the scripts, only necessary files will be rebuilt
+make web-image.raw # is up to date
+
+# Run VM using qemu (in the background)
+screen -d -m make run-web
+
+# Wait for VM to boot
+sleep 4
+
+# Check that apache is running
+curl localhost:10080/
+
+# SSH access is enabled -- the password is 'arch' by default.
+# See the user-data file to change this and to add keys.
+ssh -p 10022 arch@localhost sudo poweroff
+```
+
 ## Hacks
 
 In order to get everything working correctly, the scripts do some things
