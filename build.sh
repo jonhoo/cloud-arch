@@ -54,7 +54,7 @@ sudo sed -i "s@name: ubuntu@name: arch@" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i "s@gecos: Ubuntu@gecos: Arch@" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i "s@groups: .*@groups: [adm, wheel]@" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i '/gecos:/i \
-     uid: 500 # This depends on ./cloudinit-fix-uid.patch
+     uid: "500" # This depends on ./cloudinit-fix-uid.patch \
      system: true' "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i "/sudo:/d" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i '/# %wheel ALL=(ALL) NOPASSWD: ALL/s/^# //' "$tmp/etc/sudoers"
