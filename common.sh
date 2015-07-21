@@ -32,7 +32,6 @@ MNT_POINT="$2"
 #
 # Runs "cmd args..." chroot'd into the VM (at $MNT_POINT) as root.
 rooted() {
-	echo sudo arch-chroot "$MNT_POINT" "$@"
 	sudo arch-chroot "$MNT_POINT" "$@"
 }
 
