@@ -35,8 +35,6 @@ sudo pacstrap -c "$tmp" base \
 	#zsh fish \
 	#emacs (draws in gtk3!) \
 
-sudo patch -N "$tmp/usr/lib/python2.7/site-packages/cloudinit/distros/__init__.py" ./cloudinit-fix-uid.patch
-
 msg "Installing cloud-utils"
 aur_install_to "$tmp" cloud-utils-bzr euca2ools python2-requestbuilder
 

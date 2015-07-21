@@ -1,4 +1,4 @@
-archlinux.raw: bootstrapped.raw build.sh
+archlinux.raw: bootstrapped.raw build.sh cloudinit-fix-uid.patch
 	./build.sh
 
 config.iso: user-data meta-data

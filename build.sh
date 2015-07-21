@@ -44,6 +44,9 @@ sudo arch-chroot "$tmp" pacman -Sy
 
 msg "Configuring cloud-init"
 
+msg2 "Patching in support for forcing UID"
+sudo patch -N "$tmp/usr/lib/python2.7/site-packages/cloudinit/distros/__init__.py" ./cloudinit-fix-uid.patch
+
 # Set up main user
 msg2 "Configuring default user"
 sudo sed -i "s@distro: ubuntu@distro: arch@" "$tmp/etc/cloud/cloud.cfg"
