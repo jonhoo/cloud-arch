@@ -9,7 +9,14 @@ fi
 
 lodev=$(cat .mountpoint)
 msg "Unmounting disk image"
-sudo umount "/dev/mapper/${lodev}p1" || :
+at=$(mount | grep "/dev/mapper/${lodev}p1" | awk '{print $3}')
+if [ -n "$at" ]; then
+	sudo umount "$at/proc" 2>/dev/null || :
+	sudo umount "$at/tmp" 2>/dev/null || :
+	sudo umount "$at/dev" 2>/dev/null || :
+	sudo umount "$at/sys" 2>/dev/null || :
+	sudo umount "/dev/mapper/${lodev}p1" 2>/dev/null || :
+fi
 sudo kpartx -d "/dev/${lodev}" || :
 sudo losetup -d "/dev/${lodev}"
 rm .mountpoint
