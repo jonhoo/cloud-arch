@@ -9,7 +9,6 @@ sec "Creating bootstrap image"
 
 msg "Checking that we have necessary build tools"
 pacman -Qi arch-install-scripts >/dev/null || sudo pacman -S arch-install-scripts # for pacstrap
-pacman -Qi pacaur >/dev/null || yaourt -S pacaur
 
 tmp=$(mktemp -d -t arch-cloud-bootstrap.XXXXXXXXXX)
 tmp=$(readlink -f "$tmp")

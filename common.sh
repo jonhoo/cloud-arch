@@ -80,7 +80,6 @@ aur_install_to() {
 	shift
 
 	msg2 "Checking that we have necessary build tools"
-	pacman -Qi arch-install-scripts >/dev/null || sudo pacman -S arch-install-scripts # for pacstrap
 	pacman -Qi pacaur >/dev/null || yaourt -S pacaur
 
 	msg2 "Building $@"
