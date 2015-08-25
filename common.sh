@@ -35,6 +35,13 @@ rooted() {
 	sudo arch-chroot "$MNT_POINT" "$@"
 }
 
+# vm_install packages
+#
+# Runs pacman -S --noconfirm rooted inside the VM
+vm_install() {
+	sudo pacman --root "$MNT_POINT" -S --noconfirm "$@"
+}
+
 pre_setup() {
 	local size="$1"
 	local self=$(basename "$0")
@@ -82,22 +89,22 @@ aur_install_to() {
 	msg2 "Checking that we have necessary build tools"
 	pacman -Qi pacaur >/dev/null || yaourt -S pacaur
 
+	# we build on the host so we don't have to pull in all of base-devel inside the VM
 	msg2 "Building $@"
-	# we do this locally so we don't have to pull in all of base-devel inside the VM
 	local bd=$(mktemp -d -t build_cloud-utils.XXXXXXXXXX)
 	bd=$(readlink -f "$bd")
-	local pwd=$(pwd)
-	cd "$bd"
 
-	msg2 "Building with pacaur"
 	# specifying AUR dependencies explicitly in case they're already installed on
 	# the host
 	env "BUILDDIR=$bd" pacaur --noconfirm --noedit --rebuild -f -m "$@"
-	find . -type f -name '*.pkg.tar.xz' -exec sudo cp {} "$mntpoint" \;
-	cd "$pwd"
-	rm -rf "$bd"
 
-	msg "Installing $@"
-	sudo arch-chroot "$mntpoint" find / -maxdepth 1 -type f -name '*.pkg.tar.xz' | xargs sudo arch-chroot "$mntpoint" pacman --noconfirm -U
-	sudo arch-chroot "$mntpoint" find / -maxdepth 1 -type f -name '*.pkg.tar.xz' -exec rm {} \;
+	# it would be great if pacaur had a --root option (issue #338) so we
+	# could avoid the separate build and install steps, but it seems that's
+	# not something that will be added to pacaur:
+	# https://github.com/rmarquis/pacaur/issues/338#issuecomment-134566092
+	msg2 "Installing"
+	find "$bd" -type f -name '*.pkg.tar.xz' | xargs sudo pacman --root "$mntpoint" --noconfirm -U
+
+	msg2 "Cleaning"
+	rm -rf "$bd"
 }
