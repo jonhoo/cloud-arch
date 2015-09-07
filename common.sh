@@ -73,30 +73,23 @@ pre_setup() {
 	msg "Preparing model install"
 }
 
-# aur_install_to root pkg [AUR dependencies...]
+# aur_install_to root pkg
 #
 # aur_install_to installs a package from the AUR using pacaur, which builds a
-# package on the host and then installs it inside $root. All AUR dependencies
-# must be specified, since dependencies not in this list already installed on
-# the host will not be installed.
-#
-# Non-AUR dependencies can be left off, since the final pacman -U install will
-# take care of them.
+# package on the host and then installs it inside $root.
 aur_install_to() {
 	mntpoint="$1"
 	shift
 
 	msg2 "Checking that we have necessary build tools"
-	pacman -Qi pacaur >/dev/null || yaourt -S pacaur
+	pacman -Qi pacaur-git >/dev/null || yaourt -S pacaur-git # -git as we need fix for issue 349
 
 	# we build on the host so we don't have to pull in all of base-devel inside the VM
 	msg2 "Building $@"
 	local bd=$(mktemp -d -t build_cloud-utils.XXXXXXXXXX)
 	bd=$(readlink -f "$bd")
 
-	# specifying AUR dependencies explicitly in case they're already installed on
-	# the host
-	env "BUILDDIR=$bd" pacaur --noconfirm --noedit --rebuild -f -m "$@"
+	env "BUILDDIR=$bd" pacaur --noconfirm --noedit --rebuild --foreign -f -m "$@"
 
 	# it would be great if pacaur had a --root option (issue #338) so we
 	# could avoid the separate build and install steps, but it seems that's

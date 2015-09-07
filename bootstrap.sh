@@ -35,7 +35,7 @@ sudo pacstrap -c "$tmp" base \
 	#emacs (draws in gtk3!) \
 
 msg "Installing cloud-utils"
-aur_install_to "$tmp" cloud-utils-bzr euca2ools python2-requestbuilder
+aur_install_to "$tmp" cloud-utils-bzr
 
 ./unmount.sh "$tmp"
 mv bootstrapped.raw.tmp bootstrapped.raw
