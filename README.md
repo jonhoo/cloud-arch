@@ -54,10 +54,10 @@ echo 'rooted pacman -S --noconfirm apache' >> setups/web.sh
 echo 'rooted systemctl enable httpd' >> setups/web.sh
 
 # Build image
-make web-image.raw
+make web.img
 
 # If you modify the scripts, only necessary files will be rebuilt
-make web-image.raw # is up to date
+make web.img # is up to date
 
 # Run VM using qemu (in the background)
 screen -d -m make run-web

@@ -1,5 +1,6 @@
 .mountpoint
 *.raw
-*.raw.tmp
+*.tmp
+*.img
 *.iso
 /mnt

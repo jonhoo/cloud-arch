@@ -8,18 +8,18 @@ config.iso: user-data meta-data
 bootstrapped.raw: bootstrap.sh
 	./bootstrap.sh
 
-%.instance.raw: %.raw config.iso
+%.instance.img: %.raw config.iso
 	# depends on config.iso because some settings aren't applied unless the
 	# image is clean
 	cp $*.raw $@
 
-%-image.raw: setups/%.sh archlinux.raw
+%.img: setups/%.sh archlinux.raw
 	cp archlinux.raw $@.tmp
 	sh -c 'set -e; D=$$(mktemp -d -t arch-cloud-setup.XXXXXXXXXX); ./mount.sh "$@.tmp" "$$D"; setups/$*.sh "$@.tmp" "$$D"; ./unmount.sh "$$D"'
 	mv $@.tmp $@
 
-.PRECIOUS: %-image.raw
-.PRECIOUS: %.instance.raw
+.PRECIOUS: %.img
+.PRECIOUS: %.instance.img
 
 mount: archlinux.instance.raw
 	mkdir -p mnt
@@ -29,10 +29,10 @@ unmount:
 	./unmount.sh
 
 FWD=hostfwd=tcp::10080-:80
-run-%: config.iso %-image.instance.raw
+run-%: config.iso %.instance.img
 	qemu-system-x86_64 \
 		-enable-kvm \
-		-nographic -drive file=$*-image.instance.raw,if=virtio \
+		-nographic -drive file=$*.instance.img,if=virtio \
 		-drive file=config.iso,if=virtio \
 		-net user,hostfwd=tcp::10022-:22,$(FWD) \
 		-net nic
@@ -46,8 +46,7 @@ run: config.iso archlinux.instance.raw
 
 clean:
 	rm -f bootstrapped.raw
-	rm -f *.instance.raw
 	rm -f archlinux.raw
-	rm -f *-image.raw
-	rm -f *.raw.tmp
+	rm -f *.tmp
+	rm -f *.img
 	rm -f config.iso
