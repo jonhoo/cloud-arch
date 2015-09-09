@@ -54,10 +54,20 @@ sudo sed -i "s@name: ubuntu@name: arch@" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i "s@gecos: Ubuntu@gecos: Arch@" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i "s@groups: .*@groups: [adm, wheel]@" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i '/gecos:/i \
+     homedir: "/home/default" \
      uid: "500" # This depends on ./cloudinit-fix-uid.patch \
      system: true' "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i "/sudo:/d" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i '/# %wheel ALL=(ALL) NOPASSWD: ALL/s/^# //' "$tmp/etc/sudoers"
+
+# Because we're creating a system user, their home directory won't be created
+# However, when setting up ssh keys, the directory is created anyway:
+# https://bazaar.launchpad.net/~ubuntu-branches/ubuntu/wily/cloud-init/wily/view/head:/cloudinit/ssh_util.py#L242
+# Unfortunately, it is then owned by root, which means the default user's home
+# directory is non-writeable. To remedy this, we create their home directory
+# here, and set permissions correctly.
+sudo mkdir -m 0700 -p "$tmp/home/default"
+sudo chown 500:100 "$tmp/home/default" # 500:100 => arch:users
 
 # Set up data sources
 msg2 "Setting up data sources"
