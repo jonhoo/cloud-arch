@@ -52,8 +52,9 @@ msg2 "Configuring default user"
 sudo sed -i "s@distro: ubuntu@distro: arch@" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i "s@name: ubuntu@name: arch@" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i "s@gecos: Ubuntu@gecos: Arch@" "$tmp/etc/cloud/cloud.cfg"
-sudo sed -i "s@groups: .*@groups: [adm, wheel]@" "$tmp/etc/cloud/cloud.cfg"
+sudo sed -i "s@groups: .*@groups: [users, adm, wheel]@" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i '/gecos:/i \
+     primary-group: "users" \
      homedir: "/home/default" \
      uid: "500" # This depends on ./cloudinit-fix-uid.patch \
      system: true' "$tmp/etc/cloud/cloud.cfg"
