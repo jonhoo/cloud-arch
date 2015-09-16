@@ -82,7 +82,7 @@ aur_install_to() {
 	shift
 
 	msg2 "Checking that we have necessary build tools"
-	pacman -Qi pacaur-git >/dev/null || yaourt -S pacaur-git # -git as we need fix for issue 349
+	pacman -Qi pacaur >/dev/null || yaourt -S pacaur
 
 	# we build on the host so we don't have to pull in all of base-devel inside the VM
 	msg2 "Building $@"
