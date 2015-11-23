@@ -49,9 +49,6 @@ sudo patch -N "$tmp/usr/lib/python2.7/site-packages/cloudinit/distros/__init__.p
 
 # Set up main user
 msg2 "Configuring default user"
-sudo sed -i "s@distro: ubuntu@distro: arch@" "$tmp/etc/cloud/cloud.cfg"
-sudo sed -i "s@name: ubuntu@name: arch@" "$tmp/etc/cloud/cloud.cfg"
-sudo sed -i "s@gecos: Ubuntu@gecos: Arch@" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i "s@groups: .*@groups: [users, adm, wheel]@" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i '/gecos:/i \
      primary-group: "users" \
