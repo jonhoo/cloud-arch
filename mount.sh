@@ -22,7 +22,7 @@ if [ ! -e "$file" ]; then
 fi
 
 msg2 "Setting up disk mountpoint"
-lodev=$(basename "$(sudo losetup -f --show "$file")")
+lodev=$(basename "$(sudo losetup --show -f "$file")")
 sudo kpartx -a "/dev/$lodev"
 # wait for partition to become available
 sleep 1
