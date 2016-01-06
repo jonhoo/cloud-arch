@@ -1,4 +1,5 @@
 .mountpoint
+*.qcow
 *.raw
 *.tmp
 *.img
