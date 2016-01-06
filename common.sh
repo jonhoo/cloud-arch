@@ -89,7 +89,7 @@ aur_install_to() {
 	local bd=$(mktemp -d -t build_cloud-utils.XXXXXXXXXX)
 	bd=$(readlink -f "$bd")
 
-	env "PKGDEST=$bd" pacaur --noconfirm --noedit --rebuild --foreign -f -m "$@"
+	env "PKGDEST=$bd" pacaur --noconfirm --noedit --rebuild --foreign -m "$@"
 
 	# it would be great if pacaur had a --root option (issue #338) so we
 	# could avoid the separate build and install steps, but it seems that's
