@@ -44,6 +44,8 @@ sudo arch-chroot "$tmp" pacman -Sy
 
 msg "Configuring cloud-init"
 
+# https://bugs.launchpad.net/cloud-init/+bug/1396362<Paste>
+# https://github.com/coreos/bugs/issues/718
 msg2 "Patching in support for forcing UID"
 sudo patch -N "$tmp/usr/lib/python2.7/site-packages/cloudinit/distros/__init__.py" ./cloudinit-fix-uid.patch
 
