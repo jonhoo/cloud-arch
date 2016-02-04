@@ -85,8 +85,8 @@ aur_install_to() {
 	pacman -Qi pacaur >/dev/null || yaourt -S pacaur
 
 	# we build on the host so we don't have to pull in all of base-devel inside the VM
-	msg2 "Building $@"
-	local bd=$(mktemp -d -t build_cloud-utils.XXXXXXXXXX)
+	msg2 "Building $*"
+	local bd=$(mktemp -d -t aur_build.XXXXXXXXXX)
 	bd=$(readlink -f "$bd")
 
 	env "PKGDEST=$bd" pacaur --noconfirm --noedit --rebuild --foreign -m "$@"

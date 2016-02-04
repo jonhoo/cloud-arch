@@ -135,5 +135,12 @@ You might also want to update the system using
 
 (you can change this message by editing /etc/motd)" | sudo tee -a "$tmp/etc/motd"
 
+msg "Fetching growpart"
+sudo wget \
+	-O "$tmp/usr/bin/growpart" \
+	"https://bazaar.launchpad.net/~cloud-utils-dev/cloud-utils/trunk/download/head:/growpart-20110225134600-d84xgz6209r194ob-1/growpart"
+sudo chmod 755 "$tmp/usr/bin/growpart"
+
+
 ./unmount.sh "$tmp"
 mv archlinux.raw.tmp archlinux.raw

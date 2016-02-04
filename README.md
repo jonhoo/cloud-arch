@@ -78,12 +78,6 @@ ssh -p 10022 arch@localhost sudo poweroff
 In order to get everything working correctly, the scripts do some things
 that you wouldn't expect to be necessary. These are:
 
- - Builds `cloud-utils` from bzr source. Can't use `cloud-utils` in AUR
-   because upstream has not yet produced a release with the fix for
-   [1197894](https://bugzilla.redhat.com/show_bug.cgi?id=1197894).
-   `image-bootstrap` just downloads the `growpart` binary (which is all
-   we really need from the package), but I figured it would be nice to
-   keep the full package.
  - Bootstrap installs `dmidecode` because many VM hosts use this to
    query information about the guest.
  - `build.sh` enables serial console output for the bootloader so that
