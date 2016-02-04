@@ -87,6 +87,15 @@ sudo sed -i '/apt-pipelining/d' "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i '/apt-configure/d' "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i '/byobu/d' "$tmp/etc/cloud/cloud.cfg"
 
+# Fix broken handling of locale in Arch:
+# https://bugs.launchpad.net/cloud-init/+bug/1402406
+msg2 "Set locale"
+sudo sed -i '/locale/d' "$tmp/etc/cloud/cloud.cfg"
+sudo sed -i '/en_US.UTF-8/ s/^#//' "$tmp/etc/locale.gen"
+echo "LANG=en_US.UTF-8
+LC_ALL=en_US.UTF-8" | sudo tee "$tmp/etc/locale.conf"
+sudo arch-chroot "$tmp" locale-gen
+
 # Set up network
 msg "Configuring network"
 echo '[Match]
