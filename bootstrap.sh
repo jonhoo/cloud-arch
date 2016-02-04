@@ -17,25 +17,27 @@ rm -f bootstrapped.raw
 ./mount.sh "bootstrapped.raw.tmp" "$tmp"
 
 msg "Installing packages"
-sudo pacstrap -c "$tmp" base \
-	syslinux \
-	openssh sudo \
-	gnu-netcat rsync wget git \
-	python2 \
-	vim \
-	cloud-init dmidecode \
-	rxvt-unicode-terminfo
-	#gdb htop lsof strace mlocate numactl tmux the_silver_searcher \
-	#base-devel clang cmake linux-headers \
-	#git mercurial subversion bzr \
-	#gnuplot graphviz \
-	#ghc go rust python2 ruby \
-	#pkgfile \
-	#zsh fish \
-	#emacs (draws in gtk3!) \
-
-msg "Installing cloud-utils"
-aur_install_to "$tmp" cloud-utils-bzr
+sudo pacman -Syy
+{
+	# prefer linux-lts over linux:
+	# https://bbs.archlinux.org/viewtopic.php?pid=1358205#p1358205
+	pacman -Sqg base | sed 's/^\(linux\)$/\1-lts/';
+	echo \
+		syslinux \
+		openssh sudo \
+		gnu-netcat rsync wget git \
+		python2 \
+		vim \
+		linux-lts \
+		cloud-init dmidecode \
+		rxvt-unicode-terminfo \
+		python2-requests # https://bugs.archlinux.org/task/46909
+		#base-devel clang cmake linux-headers \
+		#git mercurial subversion bzr \
+		#ghc go rust python2 ruby \
+		#zsh fish
+		#
+} | sudo pacstrap -c "$tmp" -
 
 ./unmount.sh "$tmp"
 mv bootstrapped.raw.tmp bootstrapped.raw
