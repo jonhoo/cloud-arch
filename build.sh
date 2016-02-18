@@ -68,7 +68,8 @@ sudo sed -i '/# %wheel ALL=(ALL) NOPASSWD: ALL/s/^# //' "$tmp/etc/sudoers"
 # directory is non-writeable. To remedy this, we create their home directory
 # here, and set permissions correctly.
 sudo mkdir -m 0700 -p "$tmp/home/default"
-sudo chown 500:100 "$tmp/home/default" # 500:100 => arch:users
+sudo mkdir -m 0700 -p "$tmp/home/default/.ssh"
+sudo chown -R 500:100 "$tmp/home/default" # 500:100 => arch:users
 
 # Set up data sources
 msg2 "Setting up data sources"
