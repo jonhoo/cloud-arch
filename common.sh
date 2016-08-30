@@ -52,16 +52,13 @@ pre_setup() {
 		msg "Growing image $IMAGE_FILE"
 		./unmount.sh
 		fallocate -l "$size" "$IMAGE_FILE"
-		./mount.sh "$IMAGE_FILE" "$MNT_POINT"
+		local lodev=$(basename "$(sudo losetup -f --show "$IMAGE_FILE")")
 
-		msg "Growing partitions"
-		local lodev=$(cat .mountpoint)
-		rooted /usr/bin/growpart "/dev/${lodev}" 1
+		msg "Growing partition"
+		# easiest way of growing a partition is to re-create it
+		printf "o\nn\np\n1\n\n\na\nw\n" | sudo fdisk "/dev/${lodev}" > /dev/null || true
 
 		msg "Growing filesystem"
-		./unmount.sh
-
-		lodev=$(basename "$(sudo losetup -f --show "$IMAGE_FILE")")
 		e2fsck -f "/dev/${lodev}p1"
 		resize2fs "/dev/${lodev}p1"
 		sudo losetup -d "/dev/${lodev}"
