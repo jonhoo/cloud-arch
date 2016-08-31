@@ -31,7 +31,8 @@ echo "$lodev" > .mountpoint
 
 if [ "$new" = "1" ]; then
 	msg2 "Formatting disk"
-	sudo mkfs.ext4 "/dev/mapper/${lodev}p1"
+	# no 64-bit, or we can't use it as a boot disk
+	sudo mkfs.ext4 -O ^64bit "/dev/mapper/${lodev}p1"
 fi
 
 if [ $# -eq 2 ]; then
