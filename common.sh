@@ -56,15 +56,20 @@ pre_setup() {
 
 		msg "Growing partition"
 		# easiest way of growing a partition is to re-create it
+		sudo partx -d "/dev/${lodev}"
 		printf "o\nn\np\n1\n\n\na\nw\n" | sudo fdisk "/dev/${lodev}" > /dev/null || true
+		sudo partx -a "/dev/${lodev}"
 
 		msg "Growing filesystem"
-		e2fsck -f "/dev/${lodev}p1"
-		resize2fs "/dev/${lodev}p1"
+		sudo e2fsck -f "/dev/${lodev}p1"
+		sudo resize2fs "/dev/${lodev}p1"
 		sudo losetup -d "/dev/${lodev}"
 
 		msg "Remounting"
 		./mount.sh "$IMAGE_FILE" "$MNT_POINT"
+
+		# we just wiped the MBR, so we need to write syslinux again
+		sudo dd conv=notrunc bs=440 count=1 "if=$MNT_POINT/usr/lib/syslinux/bios/mbr.bin" "of=/dev/${lodev}"
 	fi
 
 	msg "Preparing model install"
