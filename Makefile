@@ -8,6 +8,9 @@ config.iso: user-data meta-data
 bootstrapped.raw: bootstrap.sh
 	./bootstrap.sh
 
+archlinux.instance.raw: archlinux.raw config.iso
+	cp archlinux.raw $@
+
 %.instance.img: %.img config.iso
 	# depends on config.iso because some settings aren't applied unless the
 	# image is clean
