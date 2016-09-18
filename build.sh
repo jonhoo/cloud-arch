@@ -48,7 +48,6 @@ msg "Configuring cloud-init"
 # https://bugs.launchpad.net/cloud-init/+bug/1396362<Paste>
 # https://github.com/coreos/bugs/issues/718
 msg2 "Patching in support for forcing UID"
-sudo patch -N "$tmp/usr/lib/python2.7/site-packages/cloudinit/distros/__init__.py" ./cloudinit-fix-uid.patch
 
 # Set up main user
 msg2 "Configuring default user"
@@ -56,7 +55,7 @@ sudo sed -i "s@groups: .*@groups: [users, adm, wheel]@" "$tmp/etc/cloud/cloud.cf
 sudo sed -i '/gecos:/i \
      primary-group: "users" \
      homedir: "/home/default" \
-     uid: "500" # This depends on ./cloudinit-fix-uid.patch \
+     uid: "500" \
      system: true' "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i "/sudo:/d" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i '/# %wheel ALL=(ALL) NOPASSWD: ALL/s/^# //' "$tmp/etc/sudoers"
