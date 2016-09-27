@@ -45,10 +45,6 @@ sudo arch-chroot "$tmp" pacman -Sy
 
 msg "Configuring cloud-init"
 
-# https://bugs.launchpad.net/cloud-init/+bug/1396362<Paste>
-# https://github.com/coreos/bugs/issues/718
-msg2 "Patching in support for forcing UID"
-
 # Set up main user
 msg2 "Configuring default user"
 sudo sed -i "s@groups: .*@groups: [users, adm, wheel]@" "$tmp/etc/cloud/cloud.cfg"
