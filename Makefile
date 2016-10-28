@@ -34,6 +34,7 @@ unmount:
 FWD=hostfwd=tcp::10080-:80
 run-%: config.iso %.instance.img
 	qemu-system-x86_64 \
+		-m 1G \
 		-enable-kvm \
 		-nographic -drive file=$*.instance.img,if=virtio \
 		-drive file=config.iso,if=virtio \
@@ -42,6 +43,7 @@ run-%: config.iso %.instance.img
 
 run: config.iso archlinux.instance.raw
 	qemu-system-x86_64 \
+		-m 1G \
 		-enable-kvm \
 		-nographic -drive file=archlinux.instance.raw,if=virtio \
 		-drive file=config.iso,if=virtio \
