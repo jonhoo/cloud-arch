@@ -47,6 +47,10 @@ msg "Configuring cloud-init"
 
 # Set up main user
 msg2 "Configuring default user"
+sudo sed -i "s@disable_root: false@disable_root: true@" "$tmp/etc/cloud/cloud.cfg"
+sudo sed -i '/disable_root: true/i \
+users: \
+  - default' "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i "s@groups: .*@groups: [users, adm, wheel]@" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i '/gecos:/i \
      primary-group: "users" \
@@ -69,20 +73,6 @@ sudo chown -R 500:100 "$tmp/home/default" # 500:100 => arch:users
 # Set up data sources
 msg2 "Setting up data sources"
 sudo sed -i "/Example datasource config/i \\datasource_list: [ NoCloud, ConfigDrive, OpenNebula, Azure, AltCloud, OVF, MAAS, GCE, OpenStack, CloudSigma, Ec2, CloudStack, None ]" "$tmp/etc/cloud/cloud.cfg"
-
-# Avoid errors about syslog not existing
-# See https://bugs.launchpad.net/cloud-init/+bug/1172983
-msg2 "Fixing syslog permissions"
-sudo sed -i "/datasource_list/i \\syslog_fix_perms: null" "$tmp/etc/cloud/cloud.cfg"
-
-# Don't start Ubuntu things
-msg2 "Disabling unused modules"
-sudo sed -i '/emit_upstart/d' "$tmp/etc/cloud/cloud.cfg"
-sudo sed -i '/ubuntu-init-switch/d' "$tmp/etc/cloud/cloud.cfg"
-sudo sed -i '/grub-dpkg/d' "$tmp/etc/cloud/cloud.cfg"
-sudo sed -i '/apt-pipelining/d' "$tmp/etc/cloud/cloud.cfg"
-sudo sed -i '/apt-configure/d' "$tmp/etc/cloud/cloud.cfg"
-sudo sed -i '/byobu/d' "$tmp/etc/cloud/cloud.cfg"
 
 # Fix broken handling of locale in Arch:
 # https://bugs.launchpad.net/cloud-init/+bug/1402406

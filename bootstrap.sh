@@ -33,21 +33,5 @@ sudo pacman -Syy
 		rxvt-unicode-terminfo
 } | sudo pacstrap -c "$tmp" -
 
-# Okay, so, the Arch cloud-init package is currently horribly broken in that
-# it's missing *a lot* of dependencies. We'll install those here for now.
-# See https://git.launchpad.net/cloud-init/tree/requirements.txt
-sudo pacman --root "$tmp" -S --noconfirm \
-	python2-jinja \
-	python2-prettytable \
-	python2-oauthlib \
-	python2-configobj \
-	python2-yaml \
-	python2-requests \
-	python2-jsonpatch \
-	python2-six
-
-# this dependency is only in the aur
-aur_install_to "$tmp" python2-argparse
-
 ./unmount.sh "$tmp"
 mv bootstrapped.raw.tmp bootstrapped.raw
