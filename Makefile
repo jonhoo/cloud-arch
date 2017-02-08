@@ -2,7 +2,7 @@ archlinux.raw: bootstrapped.raw build.sh
 	./build.sh
 
 config.iso: user-data meta-data
-	pacman -Qi cdrkit >/dev/null || sudo pacman -S cdrkit # for genisoimage
+	pacman -Qi cdrtools >/dev/null || sudo pacman -S cdrtools # for genisoimage
 	genisoimage  -output $@ -volid cidata -joliet -rock user-data meta-data
 
 bootstrapped.raw: bootstrap.sh
