@@ -60,19 +60,17 @@ sudo sed -i '/gecos:/i \
 sudo sed -i "/sudo:/d" "$tmp/etc/cloud/cloud.cfg"
 sudo sed -i '/# %wheel ALL=(ALL) NOPASSWD: ALL/s/^# //' "$tmp/etc/sudoers"
 
-# Because we're creating a system user, their home directory won't be created
-# However, when setting up ssh keys, the directory is created anyway:
-# https://bazaar.launchpad.net/~ubuntu-branches/ubuntu/wily/cloud-init/wily/view/head:/cloudinit/ssh_util.py#L242
-# Unfortunately, it is then owned by root, which means the default user's home
-# directory is non-writeable. To remedy this, we create their home directory
-# here, and set permissions correctly.
-sudo mkdir -m 0700 -p "$tmp/home/default"
-sudo mkdir -m 0700 -p "$tmp/home/default/.ssh"
-sudo chown -R 500:100 "$tmp/home/default" # 500:100 => arch:users
+# https://wiki.archlinux.org/index.php/Cloud-init#Default_user_configuration
+msg2 "Priming for Arch"
+sudo sed -i "s/distro: ubuntu/distro: arch/" "$tmp/etc/cloud/cloud.cfg"
 
 # Set up data sources
+# https://wiki.archlinux.org/index.php/Cloud-init#Configuring_data_sources
 msg2 "Setting up data sources"
-sudo sed -i "/Example datasource config/i \\datasource_list: [ NoCloud, ConfigDrive, OpenNebula, Azure, AltCloud, OVF, MAAS, GCE, OpenStack, CloudSigma, Ec2, CloudStack, None ]" "$tmp/etc/cloud/cloud.cfg"
+sudo sed -i "/ssh_genkeytypes/i \\datasource_list: [ NoCloud, ConfigDrive, OpenNebula, Azure, AltCloud, OVF, MAAS, GCE, OpenStack, CloudSigma, Ec2, CloudStack, None ]" "$tmp/etc/cloud/cloud.cfg"
+
+# We now *must* enable logging
+sudo sed -i '/ - \[ \*log_base, \*log_syslog \]/ s/^#//' "$tmp/etc/cloud/cloud.cfg.d/05_logging.cfg"
 
 # Fix broken handling of locale in Arch:
 # https://bugs.launchpad.net/cloud-init/+bug/1402406
@@ -82,6 +80,17 @@ sudo sed -i '/en_US.UTF-8/ s/^#//' "$tmp/etc/locale.gen"
 echo "LANG=en_US.UTF-8
 LC_ALL=en_US.UTF-8" | sudo tee "$tmp/etc/locale.conf"
 sudo arch-chroot "$tmp" locale-gen
+
+
+# Because we're creating a system user, their home directory won't be created
+# However, when setting up ssh keys, the directory is created anyway:
+# https://bazaar.launchpad.net/~ubuntu-branches/ubuntu/wily/cloud-init/wily/view/head:/cloudinit/ssh_util.py#L242
+# Unfortunately, it is then owned by root, which means the default user's home
+# directory is non-writeable. To remedy this, we create their home directory
+# here, and set permissions correctly.
+sudo mkdir -m 0700 -p "$tmp/home/default"
+sudo mkdir -m 0700 -p "$tmp/home/default/.ssh"
+sudo chown -R 500:100 "$tmp/home/default" # 500:100 => arch:users
 
 # Set up network
 msg "Configuring network"
