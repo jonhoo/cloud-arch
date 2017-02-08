@@ -75,6 +75,9 @@ sudo sed -i '/^After=/ s/dbus.service //' "$tmp/usr/lib/systemd/system/systemd-n
 sudo sed -i '/Wants=org.freedesktop.network1.busname/d' "$tmp/usr/lib/systemd/system/systemd-networkd.service"
 sudo sed -i '/After=org.freedesktop.network1.busname/d' "$tmp/usr/lib/systemd/system/systemd-networkd.service"
 
+# Work around https://bugs.launchpad.net/cloud-init/+bug/1663045
+sudo sed -i "/str(tuple(info.get('dns-nameservers'))).replace(',', '')/ s/$/ if info.get('dns-nameservers') != None else None/" "$tmp/usr/lib/python2.7/site-packages/cloudinit/distros/arch.py"
+
 # We now *must* enable logging
 sudo sed -i '/ - \[ \*log_base, \*log_syslog \]/ s/^#//' "$tmp/etc/cloud/cloud.cfg.d/05_logging.cfg"
 
