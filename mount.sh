@@ -16,7 +16,7 @@ fi
 
 if [ ! -e "$file" ]; then
 	msg2 "Preparing disk image file"
-	fallocate -l 1.2G "$file"
+	fallocate -l 1.5G "$file"
 	printf "o\nn\np\n1\n\n\na\nw\n" | fdisk "$file" > /dev/null
 	new=1
 fi

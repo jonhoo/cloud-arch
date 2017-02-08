@@ -56,8 +56,8 @@ pre_setup() {
 
 		msg "Growing partition"
 		# easiest way of growing a partition is to re-create it
-		sudo partx -a "/dev/${lodev}"
-		sudo partx -d "/dev/${lodev}"
+		sudo partx -a "/dev/${lodev}" || true
+		sudo partx -d "/dev/${lodev}" || true
 		printf "o\nn\np\n1\n\n\na\nw\n" | sudo fdisk "/dev/${lodev}" > /dev/null || true
 		sudo partx -a "/dev/${lodev}"
 
