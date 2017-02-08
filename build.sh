@@ -69,6 +69,12 @@ sudo sed -i "s/distro: ubuntu/distro: arch/" "$tmp/etc/cloud/cloud.cfg"
 msg2 "Setting up data sources"
 sudo sed -i "/ssh_genkeytypes/i \\datasource_list: [ NoCloud, ConfigDrive, OpenNebula, Azure, AltCloud, OVF, MAAS, GCE, OpenStack, CloudSigma, Ec2, CloudStack, None ]" "$tmp/etc/cloud/cloud.cfg"
 
+# Work around https://bugs.launchpad.net/ubuntu/+source/systemd/+bug/1636912
+sudo sed -i 's/Before=network-online.target/After=network-online.target/' "$tmp/usr/lib/systemd/system/cloud-init.service"
+sudo sed -i '/^After=/ s/dbus.service //' "$tmp/usr/lib/systemd/system/systemd-networkd.service"
+sudo sed -i '/Wants=org.freedesktop.network1.busname/d' "$tmp/usr/lib/systemd/system/systemd-networkd.service"
+sudo sed -i '/After=org.freedesktop.network1.busname/d' "$tmp/usr/lib/systemd/system/systemd-networkd.service"
+
 # We now *must* enable logging
 sudo sed -i '/ - \[ \*log_base, \*log_syslog \]/ s/^#//' "$tmp/etc/cloud/cloud.cfg.d/05_logging.cfg"
 
