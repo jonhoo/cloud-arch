@@ -67,7 +67,7 @@ sudo sed -i "s/distro: ubuntu/distro: arch/" "$tmp/etc/cloud/cloud.cfg"
 # Set up data sources
 # https://wiki.archlinux.org/index.php/Cloud-init#Configuring_data_sources
 msg2 "Setting up data sources"
-sudo sed -i "/ssh_genkeytypes/i \\datasource_list: [ NoCloud, ConfigDrive, OpenNebula, Azure, AltCloud, OVF, MAAS, GCE, OpenStack, CloudSigma, Ec2, CloudStack, None ]" "$tmp/etc/cloud/cloud.cfg"
+sudo sed -i "/ssh_genkeytypes/i \\datasource_list: [ NoCloud, ConfigDrive, OpenNebula, Azure, AltCloud, OVF, MAAS, GCE, OpenStack, CloudSigma, Ec2, CloudStack ]" "$tmp/etc/cloud/cloud.cfg"
 
 # Work around https://bugs.launchpad.net/ubuntu/+source/systemd/+bug/1636912
 sudo sed -i 's/Before=network-online.target/After=network-online.target/' "$tmp/usr/lib/systemd/system/cloud-init.service"
