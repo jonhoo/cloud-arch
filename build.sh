@@ -114,14 +114,20 @@ UseHostname=false' | sudo tee "$tmp/etc/systemd/network/dhcp-all.network"
 sudo arch-chroot "$tmp" systemctl enable systemd-networkd.service
 sudo arch-chroot "$tmp" systemctl enable systemd-resolved.service
 sudo ln -sfn /run/systemd/resolve/resolv.conf "$tmp/etc/resolv.conf"
-sudo sed -i 's/network.target/network-online.target/' "$tmp/usr/lib/systemd/system/cloud-init.service"
 
 # Start daemons on boot
 msg "Enabling system services"
+msg2 "Enabling ssh"
 sudo arch-chroot "$tmp" systemctl enable sshd
-sudo arch-chroot "$tmp" systemctl enable cloud-init
-sudo arch-chroot "$tmp" systemctl enable cloud-config
-sudo arch-chroot "$tmp" systemctl enable cloud-final
+msg2 "Overwriting broken cloud-init systemd thing"
+# https://bugzilla.redhat.com/show_bug.cgi?id=1430511
+# https://bugs.archlinux.org/task/54785
+curl https://raw.githubusercontent.com/larsks/cloud-init/c5ac8962ea6d0f2ffcd3c3a5811a8c6f45436099/systemd/cloud-init.service \
+	| sudo arch-chroot "$tmp" tee /lib/systemd/system/cloud-init.service
+msg2 "Enabling cloud-init"
+sudo arch-chroot "$tmp" systemctl enable cloud-init.service
+sudo arch-chroot "$tmp" systemctl enable cloud-config.service
+sudo arch-chroot "$tmp" systemctl enable cloud-final.service
 
 # Remove machine ID so it is regenerated on boot
 msg "Wiping machine ID"
